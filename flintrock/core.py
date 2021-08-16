@@ -531,7 +531,6 @@ def ensure_java8(client: paramiko.client.SSHClient):
                 set -e
 
                 # Install Java 1.8 first to protect packages that depend on Java from being removed.
-                # Pin to specific patch version of 1.8 that is known to be compatible with Spark
                 sudo yum install -y java-1.8.0-openjdk
 
                 # Remove any older versions of Java to force the default Java to 1.8.
@@ -542,6 +541,8 @@ def ensure_java8(client: paramiko.client.SSHClient):
                 sudo sh -c "echo export JAVA_HOME=/usr/lib/jvm/jre >> /etc/environment"
                 source /etc/environment
             """)
+    else:
+        logger.info(f'Java 1.8 already installed ({java_major_version})')
 
 
 def setup_node(
