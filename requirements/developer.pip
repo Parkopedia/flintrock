@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/developer.pip requirements/developer.in
 #
--e file:.#egg=ppds-flintrock
+-e file:.#egg=ppdsflintrock
 attrs==19.3.0             # via pytest
 bcrypt==3.1.7
 boto3==1.10.45

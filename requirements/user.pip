@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/user.pip requirements/user.in
 #
--e file:.#egg=ppds-flintrock
+-e file:.#egg=ppdsflintrock
 bcrypt==3.1.7             # via paramiko
 boto3==1.10.45
 botocore==1.13.45         # via boto3, s3transfer
