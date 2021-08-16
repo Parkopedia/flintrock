@@ -337,6 +337,47 @@ class Spark(FlintrockService):
             'git_commit': git_commit,
             'git_repository': git_repository}
 
+    def java_compatibility_fix(self, ssh_client: paramiko.client.SSHClient):
+        """Ensure the java patch version is compatible"""
+        # Check the patch version of java
+        logger.info('[{h}] Checking Java patch version for compatibility'.format(
+            h=ssh_client.get_transport().getpeername()[0]
+        ))
+
+        java_version = ssh_check_output(
+            client=ssh_client,
+            command="java -version",
+        ).split()
+
+        # java version e.g. "1.8.0_292", patch number is the last part
+        patch_version = int(java_version[2].strip('"').split("_")[-1])
+
+        # Downgrade Java if a previous step (e.g. installing HDFS) has updated
+        # it. It has already been asserted at this point that we have java 1.8
+        # installed so only the patch version is checked here
+        if patch_version > 161:
+            logger.info('[{h}] Java patch version is not compatibile ({pv}), downgrading'.format(
+                pv=patch_version,
+                h=ssh_client.get_transport().getpeername()[0]
+            ))
+
+            ssh_check_output(
+                client=ssh_client,
+                command="""
+                sudo yum remove -y java-1.8.0-openjdk java-1.8.0-openjdk-headless &&
+                sudo yum install -y java-1.8.0-openjdk-1.8.0.161-0.b14.amzn2.x86_64
+            """)
+
+        java_version = ssh_check_output(
+            client=ssh_client,
+            command="java -version",
+        ).split()
+
+        logger.info('[{h}] Java version is : {jv}'.format(
+            jv=java_version[2].strip('"'),
+            h=ssh_client.get_transport().getpeername()[0]
+        ))
+
     def install(
         self,
         ssh_client: paramiko.client.SSHClient,
@@ -445,6 +486,8 @@ class Spark(FlintrockService):
                                 spark_version=self.version or self.git_commit,
                             ))),
                     p=shlex.quote(template_path)))
+
+        self.java_compatibility_fix(ssh_client)
 
     # TODO: Convert this into start_master() and split master- or slave-specific
     #       stuff out of configure() into configure_master() and configure_slave().
