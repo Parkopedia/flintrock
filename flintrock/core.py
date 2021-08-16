@@ -541,8 +541,6 @@ def ensure_java8(client: paramiko.client.SSHClient):
                 sudo sh -c "echo export JAVA_HOME=/usr/lib/jvm/jre >> /etc/environment"
                 source /etc/environment
             """)
-    else:
-        logger.info(f'Java 1.8 already installed ({java_major_version})')
 
 
 def setup_node(
