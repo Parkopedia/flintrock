@@ -526,7 +526,6 @@ def ensure_java8(client: paramiko.client.SSHClient):
 
         ssh_check_output(
             client=client,
-
             command="""
                 set -e
 
