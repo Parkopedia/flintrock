@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/developer.pip requirements/developer.in
 #
--e file:.#egg=Flintrock
+-e file:.#egg=ppdsflintrock
     # via -r requirements/user.pip
 attrs==21.2.0
     # via pytest

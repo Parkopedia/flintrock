@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/user.pip requirements/user.in
 #
--e file:.#egg=Flintrock
+-e file:.#egg=ppdsflintrock
     # via -r requirements/user.in
 bcrypt==3.2.0
     # via paramiko
